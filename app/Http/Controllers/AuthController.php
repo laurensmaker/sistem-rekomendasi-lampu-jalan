@@ -36,7 +36,7 @@ class AuthController extends Controller
             } elseif ($user->isStafPerencana()) {
                 return redirect()->route('dashboard.staf_perencana');
             } elseif ($user->isKepalaBidang()) {
-                return redirect()->route('dashboard.kepala');
+                return redirect()->route('dashboard.kepala_bidang');
             }
         }
 

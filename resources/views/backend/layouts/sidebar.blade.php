@@ -46,7 +46,7 @@
             @endif
 
             <!-- Data Lokasi - Semua Role Bisa Melihat -->
-            @if(auth()->user()->isAdmin() || auth()->user()->isStafPerencana() || auth()->user()->isKepalaBidang() || auth()->user()->isPetugasSurvei())
+            @if(auth()->user()->isAdmin() || auth()->user()->isStafPerencana() || auth()->user()->isKepalaBidang())
             <li class="menu-item {{ request()->routeIs('lokasi.*') ? 'active' : '' }}">
                 <a href="{{ route('lokasi.index') }}" class="menu-link">
                     <i data-feather="map-pin" class="menu-icon tf-icons"></i>
