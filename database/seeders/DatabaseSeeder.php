@@ -67,16 +67,16 @@ class DatabaseSeeder extends Seeder
                 'bobot' => 20, // 0.20
                 'atribut' => 'benefit',
             ],
-            [
-                'nama_kriteria' => 'penerangan_saat_ini',
-                'bobot' => 15, // 0.15
-                'atribut' => 'cost',
-            ],
-            [
-                'nama_kriteria' => 'kerawanan_kecelakaan',
-                'bobot' => 20, // 0.20
-                'atribut' => 'benefit',
-            ],
+            // [
+            //     'nama_kriteria' => 'penerangan_saat_ini',
+            //     'bobot' => 15, // 0.15
+            //     'atribut' => 'cost',
+            // ],
+            // [
+            //     'nama_kriteria' => 'kerawanan_kecelakaan',
+            //     'bobot' => 20, // 0.20
+            //     'atribut' => 'benefit',
+            // ],
         ];
 
         foreach ($kriteria as $k) {

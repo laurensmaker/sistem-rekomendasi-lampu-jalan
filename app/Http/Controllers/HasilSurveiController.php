@@ -46,8 +46,10 @@ class HasilSurveiController extends Controller
     public function create()
     {
         $lokasi = Lokasi::all();
-        $dokumentasi = Dokumentasi::all();
-        return view('backend.survei.create', compact('lokasi', 'dokumentasi'));
+        $dokumentasi = Dokumentasi::with('lokasi')->get();
+        $kriteria = Kriteria::orderBy('kode_kriteria')->get(); // Ambil semua kriteria
+        
+        return view('backend.hasil-survei.create', compact('lokasi', 'dokumentasi', 'kriteria'));
     }
 
    public function store(Request $request)

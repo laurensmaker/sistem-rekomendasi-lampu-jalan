@@ -130,7 +130,7 @@
                     @enderror
                 </div>
 
-                <!-- Kriteria Penilaian (C1-C5) -->
+                <!-- Kriteria Penilaian Dinamis -->
                 <div class="col-12 mb-3 mt-3">
                     <h5 class="border-bottom pb-2">Penilaian Kriteria SAW (Skala 1-5)</h5>
                     <p class="text-muted small">
@@ -139,115 +139,37 @@
                     </p>
                 </div>
 
-                <!-- C1 - Kepadatan Penduduk -->
+                @foreach($kriteria as $kriteria)
                 <div class="col-lg-6 mb-3">
-                    <label for="kepadatan_penduduk" class="form-label">
-                        C1 - Kepadatan Penduduk <span class="text-danger">*</span>
-                        <span class="badge bg-success">Benefit</span>
+                    <label for="kriteria_{{ $kriteria->id }}" class="form-label">
+                        {{ $kriteria->kode_kriteria }} - {{ $kriteria->nama_kriteria }} <span class="text-danger">*</span>
+                        <span class="badge {{ $kriteria->jenis == 'Benefit' ? 'bg-success' : 'bg-danger' }}">
+                            {{ $kriteria->jenis }}
+                        </span>
                     </label>
                     <input type="number" 
-                           name="kepadatan_penduduk" 
-                           id="kepadatan_penduduk" 
-                           class="form-control @error('kepadatan_penduduk') is-invalid @enderror" 
-                           value="{{ old('kepadatan_penduduk', 3) }}"
+                           name="kriteria[{{ $kriteria->id }}]" 
+                           id="kriteria_{{ $kriteria->id }}" 
+                           class="form-control @error('kriteria.'.$kriteria->id) is-invalid @enderror" 
+                           value="{{ old('kriteria.'.$kriteria->id, 3) }}"
                            placeholder="Masukkan nilai 1-5" 
                            min="1" 
                            max="5"
                            step="1"
                            required>
-                    <small class="text-muted">1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi</small>
-                    @error('kepadatan_penduduk')
+                    <small class="text-muted">
+                        @if($kriteria->jenis == 'Benefit')
+                            Semakin tinggi nilai semakin baik
+                        @else
+                            Semakin rendah nilai semakin baik
+                        @endif
+                        (1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi)
+                    </small>
+                    @error('kriteria.'.$kriteria->id)
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
-
-                <!-- C2 - Volume Lalu Lintas -->
-                <div class="col-lg-6 mb-3">
-                    <label for="volume_lalu_lintas" class="form-label">
-                        C2 - Volume Lalu Lintas <span class="text-danger">*</span>
-                        <span class="badge bg-success">Benefit</span>
-                    </label>
-                    <input type="number" 
-                           name="volume_lalu_lintas" 
-                           id="volume_lalu_lintas" 
-                           class="form-control @error('volume_lalu_lintas') is-invalid @enderror" 
-                           value="{{ old('volume_lalu_lintas', 3) }}"
-                           placeholder="Masukkan nilai 1-5" 
-                           min="1" 
-                           max="5"
-                           step="1"
-                           required>
-                    <small class="text-muted">1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi</small>
-                    @error('volume_lalu_lintas')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- C3 - Aktivitas Malam -->
-                <div class="col-lg-6 mb-3">
-                    <label for="aktivitas_malam" class="form-label">
-                        C3 - Aktivitas Malam <span class="text-danger">*</span>
-                        <span class="badge bg-success">Benefit</span>
-                    </label>
-                    <input type="number" 
-                           name="aktivitas_malam" 
-                           id="aktivitas_malam" 
-                           class="form-control @error('aktivitas_malam') is-invalid @enderror" 
-                           value="{{ old('aktivitas_malam', 3) }}"
-                           placeholder="Masukkan nilai 1-5" 
-                           min="1" 
-                           max="5"
-                           step="1"
-                           required>
-                    <small class="text-muted">1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi</small>
-                    @error('aktivitas_malam')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- C4 - Penerangan Saat Ini -->
-                <div class="col-lg-6 mb-3">
-                    <label for="penerangan_saat_ini" class="form-label">
-                        C4 - Penerangan Saat Ini <span class="text-danger">*</span>
-                        <span class="badge bg-danger">Cost</span>
-                    </label>
-                    <input type="number" 
-                           name="penerangan_saat_ini" 
-                           id="penerangan_saat_ini" 
-                           class="form-control @error('penerangan_saat_ini') is-invalid @enderror" 
-                           value="{{ old('penerangan_saat_ini', 3) }}"
-                           placeholder="Masukkan nilai 1-5" 
-                           min="1" 
-                           max="5"
-                           step="1"
-                           required>
-                    <small class="text-muted">1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi</small>
-                    @error('penerangan_saat_ini')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- C5 - Kerawanan Kecelakaan -->
-                <div class="col-lg-6 mb-3">
-                    <label for="kerawanan_kecelakaan" class="form-label">
-                        C5 - Kerawanan Kecelakaan <span class="text-danger">*</span>
-                        <span class="badge bg-success">Benefit</span>
-                    </label>
-                    <input type="number" 
-                           name="kerawanan_kecelakaan" 
-                           id="kerawanan_kecelakaan" 
-                           class="form-control @error('kerawanan_kecelakaan') is-invalid @enderror" 
-                           value="{{ old('kerawanan_kecelakaan', 3) }}"
-                           placeholder="Masukkan nilai 1-5" 
-                           min="1" 
-                           max="5"
-                           step="1"
-                           required>
-                    <small class="text-muted">1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi</small>
-                    @error('kerawanan_kecelakaan')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
+                @endforeach
 
                 <!-- Informasi -->
                 <div class="col-lg-12 mb-3 mt-3">
@@ -257,9 +179,9 @@
                         <ul class="mb-0 mt-1">
                             <li>Semua nilai kriteria menggunakan skala <strong>1-5</strong></li>
                             <li>
-                                <span class="text-success"><strong>Benefit</strong></span> (C1, C2, C3, C5): Semakin tinggi nilai semakin baik
+                                <span class="text-success"><strong>Benefit</strong></span>: Semakin tinggi nilai semakin baik
                                 <br>
-                                <span class="text-danger"><strong>Cost</strong></span> (C4): Semakin rendah nilai semakin baik
+                                <span class="text-danger"><strong>Cost</strong></span>: Semakin rendah nilai semakin baik
                             </li>
                             <li>Panjang jalan digunakan untuk menghitung kebutuhan lampu</li>
                             <li>Jarak antar lampu = 4 × Tinggi Tiang</li>
