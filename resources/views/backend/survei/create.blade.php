@@ -70,13 +70,6 @@
                     @enderror
                 </div>
 
-                <div class="col-lg-6 mb-3">
-                    <div class="form-control bg-light">
-                        <small class="text-muted">Surveyor</small>
-                        <p class="mb-0 fw-bold">{{ auth()->user()->name }}</p>
-                    </div>
-                </div>
-
                 <!-- Data Fisik Lokasi -->
                 <div class="col-12 mb-3 mt-3">
                     <h5 class="border-bottom pb-2">Data Fisik Lokasi</h5>

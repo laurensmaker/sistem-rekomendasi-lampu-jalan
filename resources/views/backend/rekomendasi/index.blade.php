@@ -6,9 +6,9 @@
 <div class="d-sm-flex justify-content-between align-items-center mb-4">
     <h3 class="fs-18">Hasil Rekomendasi Prioritas LPJU</h3>
     <div>
-        <a href="{{ route('rekomendasi.export-excel') }}" class="btn btn-success btn-sm">
+        {{-- <a href="{{ route('rekomendasi.export-excel') }}" class="btn btn-success btn-sm">
             <i data-feather="file-text"></i> Export Excel
-        </a>
+        </a> --}}
         <a href="{{ route('dashboard.' . auth()->user()->role) }}" class="btn btn-secondary btn-sm">
             <i data-feather="arrow-left"></i> Kembali
         </a>

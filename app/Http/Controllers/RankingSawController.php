@@ -4,9 +4,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\HasilSurvei;
+use App\Models\HasilSurveiDetail;
 use App\Models\Kriteria;
-use App\Models\RankingSaw;
 use App\Models\Lokasi;
+use App\Models\RankingSaw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 // use Illuminate\Support\Facades\Validator;
@@ -89,74 +90,80 @@ class RankingSawController extends Controller
     public function recalculateAll()
     {
         try {
-            // Ambil semua kriteria
             $kriteria = Kriteria::all();
-            
+
             if ($kriteria->isEmpty()) {
                 return redirect()->back()
                     ->with('error', 'Kriteria belum ditentukan!');
             }
 
-            // Ambil semua data hasil survei yang memiliki nilai preferensi
-            $hasilSurveiList = HasilSurvei::whereNotNull('nilai_preferensi')->get();
-            
+            // Ambil data survei yang sudah pernah dihitung
+            $hasilSurveiList = HasilSurvei::whereNotNull('nilai_preferensi')
+                ->with('details') // eager load pivot
+                ->get();
+
             if ($hasilSurveiList->isEmpty()) {
                 return redirect()->back()
                     ->with('error', 'Tidak ada data survei yang perlu dihitung ulang!');
             }
 
             DB::beginTransaction();
-            
+
+            // ── 1. Precompute nilai max/min per kriteria dari tabel pivot ──
+            $nilaiKriteria = [];
+            foreach ($kriteria as $k) {
+                $nilaiKriteria[$k->id] = HasilSurveiDetail::where('kriteria_id', $k->id)
+                    ->pluck('nilai')
+                    ->filter()
+                    ->toArray();
+            }
+
+            // ── 2. Loop setiap hasil survei ──
             foreach ($hasilSurveiList as $hasilSurvei) {
-                // Hapus ranking lama
                 RankingSaw::where('hasil_survei_id', $hasilSurvei->id)->delete();
-                
-                // Ambil semua nilai dari setiap kriteria
-                $nilaiKriteria = [];
-                foreach ($kriteria as $k) {
-                    $field = $k->nama_kriteria;
-                    $nilaiKriteria[$k->id] = HasilSurvei::pluck($field)->toArray();
-                }
-                
+
                 $totalPreferensi = 0;
-                
+
                 foreach ($kriteria as $k) {
-                    $field = $k->nama_kriteria;
-                    $nilai = $hasilSurvei->{$field};
-                    $max = max($nilaiKriteria[$k->id] ?? [1]);
-                    $min = min($nilaiKriteria[$k->id] ?? [0]);
-                    
-                    // Normalisasi berdasarkan atribut
-                    if ($k->atribut == 'benefit') {
+                    // Ambil nilai dari pivot (bukan kolom statis)
+                    $nilai = $hasilSurvei->getNilaiKriteria($k->id);
+
+                    if ($nilai === null) {
+                        // Lewati kriteria yang belum diisi (atau bisa throw exception)
+                        continue;
+                    }
+
+                    $arrNilai = $nilaiKriteria[$k->id] ?? [];
+                    $max = !empty($arrNilai) ? max($arrNilai) : 0;
+                    $min = !empty($arrNilai) ? min($arrNilai) : 0;
+
+                    if ($k->atribut === 'benefit') {
                         $normalisasi = $max > 0 ? $nilai / $max : 0;
-                    } else {
+                    } else { // cost
                         $normalisasi = $nilai > 0 ? $min / $nilai : 0;
                     }
-                    
+
                     $nilaiTerbobot = $normalisasi * ($k->bobot / 100);
                     $totalPreferensi += $nilaiTerbobot;
-                    
-                    // Simpan ke ranking_saw
+
                     RankingSaw::create([
-                        'hasil_survei_id' => $hasilSurvei->id,
-                        'kriteria_id' => $k->id,
+                        'hasil_survei_id'   => $hasilSurvei->id,
+                        'kriteria_id'       => $k->id,
                         'nilai_normalisasi' => $normalisasi,
-                        'nilai_terbobot' => $nilaiTerbobot,
+                        'nilai_terbobot'    => $nilaiTerbobot,
                     ]);
                 }
-                
-                // Update nilai preferensi
+
                 $hasilSurvei->update([
                     'nilai_preferensi' => $totalPreferensi,
                 ]);
             }
-            
+
             DB::commit();
-            
-            // Redirect ke halaman ranking-saw dengan pesan sukses
+
             return redirect()->route('ranking-saw.index')
                 ->with('success', 'Perhitungan SAW berhasil dilakukan ulang! Menampilkan 3 prioritas teratas.');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()

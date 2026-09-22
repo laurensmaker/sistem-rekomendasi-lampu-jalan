@@ -28,10 +28,17 @@ class HasilSurvei extends Model
         'nilai_preferensi',
     ];
 
+
+
     protected $casts = [
         'tanggal_survei' => 'date',
         'nilai_preferensi' => 'decimal:4',
     ];
+
+    public function details()
+    {
+        return $this->hasMany(HasilSurveiDetail::class);
+    }
 
     public function lokasi()
     {
@@ -56,5 +63,16 @@ class HasilSurvei extends Model
     public function rekomendasi()
     {
         return $this->hasOne(Rekomendasi::class);
+    }
+
+     public function getNilaiKriteria($kriteriaId)
+    {
+        return $this->details->firstWhere('kriteria_id', $kriteriaId)?->nilai;
+    }
+
+    public function getNilaiByNama($namaKriteria)
+    {
+        $kriteria = \App\Models\Kriteria::where('nama_kriteria', $namaKriteria)->first();
+        return $kriteria ? $this->getNilaiKriteria($kriteria->id) : null;
     }
 }

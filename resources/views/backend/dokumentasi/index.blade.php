@@ -108,9 +108,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="50">
-                            <input type="checkbox" id="selectAll">
-                        </th>
                         <th>#</th>
                         <th>Gambar</th>
                         <th>Lokasi</th>
@@ -124,9 +121,6 @@
                 <tbody>
                     @forelse($dokumentasi as $key => $item)
                         <tr>
-                            <td>
-                                <input type="checkbox" class="dokumentasi-checkbox" value="{{ $item->id }}">
-                            </td>
                             <td>{{ $dokumentasi->firstItem() + $key }}</td>
                             <td>
                                 @if($item->gambar)
@@ -191,20 +185,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
-                <button id="deleteSelected" class="btn btn-danger btn-sm" disabled>
-                    <i data-feather="trash-2"></i> Hapus Terpilih
-                </button>
-                <span class="ms-2 text-muted small">
-                    <span id="selectedCount">0</span> dipilih
-                </span>
-            </div>
-            <div>
-                {{ $dokumentasi->links() }}
-            </div>
         </div>
     </div>
 </div>

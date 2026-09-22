@@ -6,12 +6,12 @@
 <div class="d-sm-flex justify-content-between align-items-center mb-4">
     <h3 class="fs-18">3 Prioritas Utama Pemasangan LPJU</h3>
     <div>
-        <a href="{{ route('ranking-saw.export-excel') }}" class="btn btn-success btn-sm">
+        {{-- <a href="{{ route('ranking-saw.export-excel') }}" class="btn btn-success btn-sm">
             <i data-feather="file-text"></i> Export Excel
         </a>
         <a href="{{ route('ranking-saw.export-pdf') }}" class="btn btn-danger btn-sm">
             <i data-feather="printer"></i> Export PDF
-        </a>
+        </a> --}}
         <form action="{{ route('ranking-saw.recalculate') }}" method="POST" class="d-inline" 
               onsubmit="return confirm('Yakin ingin menghitung ulang semua data SAW?')">
             @csrf

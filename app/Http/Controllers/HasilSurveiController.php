@@ -2,16 +2,18 @@
 // app/Http/Controllers/HasilSurveiController.php
 namespace App\Http\Controllers;
 
-use App\Models\HasilSurvei;
-use App\Models\Lokasi;
 use App\Models\Dokumentasi;
+use App\Models\HasilSurvei;
+use App\Models\HasilSurveiDetail;
 use App\Models\Kriteria;
+use App\Models\Lokasi;
 use App\Models\RankingSaw;
 use App\Models\Rekomendasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class HasilSurveiController extends Controller
 {
@@ -47,90 +49,62 @@ class HasilSurveiController extends Controller
     {
         $lokasi = Lokasi::all();
         $dokumentasi = Dokumentasi::with('lokasi')->get();
-        $kriteria = Kriteria::orderBy('kode_kriteria')->get(); // Ambil semua kriteria
+        $kriteria = Kriteria::orderBy('nama_kriteria')->get(); // Ambil semua kriteria
         
-        return view('backend.hasil-survei.create', compact('lokasi', 'dokumentasi', 'kriteria'));
+        return view('backend.survei.create', compact('lokasi', 'dokumentasi', 'kriteria'));
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'lokasi_id' => 'required|exists:lokasi,id',
-            'dokumentasi_id' => 'required|exists:dokumentasi,id',
-            'tanggal_survei' => 'required|date',
-            'panjang_jalan' => 'required|numeric|min:0',
-            'lebar_jalan' => 'required|numeric|min:0',
-            'tinggi_tiang' => 'required|numeric|min:0',
-            // Kriteria C1-C5 (skala 1-5)
-            'kepadatan_penduduk' => 'required|integer|min:1|max:5',
-            'volume_lalu_lintas' => 'required|integer|min:1|max:5',
-            'aktivitas_malam' => 'required|integer|min:1|max:5',
-            'penerangan_saat_ini' => 'required|integer|min:1|max:5',
-            'kerawanan_kecelakaan' => 'required|integer|min:1|max:5',
-        ], [
-            'lokasi_id.required' => 'Lokasi wajib dipilih',
-            'lokasi_id.exists' => 'Lokasi tidak ditemukan',
-            'dokumentasi_id.required' => 'Dokumentasi wajib dipilih',
-            'dokumentasi_id.exists' => 'Dokumentasi tidak ditemukan',
-            'tanggal_survei.required' => 'Tanggal survei wajib diisi',
-            'tanggal_survei.date' => 'Format tanggal tidak valid',
-            'panjang_jalan.required' => 'Panjang jalan wajib diisi',
-            'panjang_jalan.numeric' => 'Panjang jalan harus berupa angka',
-            'panjang_jalan.min' => 'Panjang jalan minimal 0',
-            'lebar_jalan.required' => 'Lebar jalan wajib diisi',
-            'lebar_jalan.numeric' => 'Lebar jalan harus berupa angka',
-            'lebar_jalan.min' => 'Lebar jalan minimal 0',
-            'tinggi_tiang.required' => 'Tinggi tiang wajib diisi',
-            'tinggi_tiang.numeric' => 'Tinggi tiang harus berupa angka',
-            'tinggi_tiang.min' => 'Tinggi tiang minimal 0',
-            'kepadatan_penduduk.required' => 'Kepadatan penduduk wajib diisi',
-            'kepadatan_penduduk.integer' => 'Kepadatan penduduk harus berupa angka',
-            'kepadatan_penduduk.min' => 'Kepadatan penduduk minimal 1',
-            'kepadatan_penduduk.max' => 'Kepadatan penduduk maksimal 5',
-            'volume_lalu_lintas.required' => 'Volume lalu lintas wajib diisi',
-            'volume_lalu_lintas.integer' => 'Volume lalu lintas harus berupa angka',
-            'volume_lalu_lintas.min' => 'Volume lalu lintas minimal 1',
-            'volume_lalu_lintas.max' => 'Volume lalu lintas maksimal 5',
-            'aktivitas_malam.required' => 'Aktivitas malam wajib diisi',
-            'aktivitas_malam.integer' => 'Aktivitas malam harus berupa angka',
-            'aktivitas_malam.min' => 'Aktivitas malam minimal 1',
-            'aktivitas_malam.max' => 'Aktivitas malam maksimal 5',
-            'penerangan_saat_ini.required' => 'Penerangan saat ini wajib diisi',
-            'penerangan_saat_ini.integer' => 'Penerangan saat ini harus berupa angka',
-            'penerangan_saat_ini.min' => 'Penerangan saat ini minimal 1',
-            'penerangan_saat_ini.max' => 'Penerangan saat ini maksimal 5',
-            'kerawanan_kecelakaan.required' => 'Kerawanan kecelakaan wajib diisi',
-            'kerawanan_kecelakaan.integer' => 'Kerawanan kecelakaan harus berupa angka',
-            'kerawanan_kecelakaan.min' => 'Kerawanan kecelakaan minimal 1',
-            'kerawanan_kecelakaan.max' => 'Kerawanan kecelakaan maksimal 5',
+            'lokasi_id'       => 'required|exists:lokasi,id',
+            'dokumentasi_id'  => 'required|exists:dokumentasi,id',
+            'tanggal_survei'  => 'required|date',
+            'panjang_jalan'   => 'required|numeric|min:0',
+            'lebar_jalan'     => 'required|numeric|min:0',
+            'tinggi_tiang'    => 'required|numeric|min:0',
+            'kriteria'        => 'required|array',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+        $kriteriaList = \App\Models\Kriteria::all();
+        foreach ($kriteriaList as $k) {
+            $validator->addRules([
+                'kriteria.' . $k->id => 'required|integer|min:1|max:5',
+            ]);
         }
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        DB::beginTransaction();
         try {
             $hasilSurvei = HasilSurvei::create([
-                'lokasi_id' => $request->lokasi_id,
-                'dokumentasi_id' => $request->dokumentasi_id,
-                'user_id' => Auth::id(),
-                'tanggal_survei' => $request->tanggal_survei,
-                'panjang_jalan' => $request->panjang_jalan,
-                'lebar_jalan' => $request->lebar_jalan,
-                'tinggi_tiang' => $request->tinggi_tiang,
-                'kepadatan_penduduk' => $request->kepadatan_penduduk,
-                'volume_lalu_lintas' => $request->volume_lalu_lintas,
-                'aktivitas_malam' => $request->aktivitas_malam,
-                'penerangan_saat_ini' => $request->penerangan_saat_ini,
-                'kerawanan_kecelakaan' => $request->kerawanan_kecelakaan,
-                'nilai_preferensi' => null, // Akan dihitung nanti
+                'lokasi_id'        => $request->lokasi_id,
+                'dokumentasi_id'   => $request->dokumentasi_id,
+                'user_id'          => Auth::id(),
+                'tanggal_survei'   => $request->tanggal_survei,
+                'panjang_jalan'    => $request->panjang_jalan,
+                'lebar_jalan'      => $request->lebar_jalan,
+                'tinggi_tiang'     => $request->tinggi_tiang,
+                'nilai_preferensi' => null,
             ]);
+
+            foreach ($request->kriteria as $kriteriaId => $nilai) {
+                HasilSurveiDetail::create([
+                    'hasil_survei_id' => $hasilSurvei->id,
+                    'kriteria_id'     => $kriteriaId,
+                    'nilai'           => (int) $nilai,
+                ]);
+            }
+
+            DB::commit();
 
             return redirect()->route('hasil-survei.index')
                 ->with('success', 'Data survei berhasil disimpan! Silakan lakukan perhitungan SAW.');
+
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
@@ -214,65 +188,73 @@ class HasilSurveiController extends Controller
         }
     }
 
-   public function hitungSAW(HasilSurvei $hasilSurvei)
+    public function hitungSAW(HasilSurvei $hasilSurvei)
     {
         try {
-            // Ambil semua kriteria dari database
             $kriteria = Kriteria::all();
-            
+
             if ($kriteria->isEmpty()) {
-                return redirect()->back()
-                    ->with('error', 'Kriteria belum ditentukan!');
+                return redirect()->back()->with('error', 'Kriteria belum ditentukan!');
             }
 
-            // Hapus data ranking SAW sebelumnya
+            // Pastikan semua nilai kriteria untuk survei ini sudah ada
+            $hasilSurvei->load('details');
+
+            if ($hasilSurvei->details->isEmpty()) {
+                return redirect()->back()
+                    ->with('error', 'Data nilai kriteria belum diinput untuk survei ini.');
+            }
+
+            // Hapus ranking SAW lama
             RankingSaw::where('hasil_survei_id', $hasilSurvei->id)->delete();
 
-            // 1. Normalisasi matriks
-            // Ambil semua nilai dari setiap kriteria
+            // 1. Ambil semua nilai dari tabel detail per kriteria (untuk cari max & min)
             $nilaiKriteria = [];
             foreach ($kriteria as $k) {
-                $field = $k->nama_kriteria; // kepadatan_penduduk, volume_lalu_lintas, dll
-                $nilaiKriteria[$k->id] = HasilSurvei::pluck($field)->toArray();
+                $nilaiKriteria[$k->id] = HasilSurveiDetail::where('kriteria_id', $k->id)
+                    ->pluck('nilai')
+                    ->filter()
+                    ->toArray();
             }
 
             // 2. Hitung normalisasi untuk setiap kriteria
             foreach ($kriteria as $k) {
-                $field = $k->nama_kriteria;
-                $nilai = $hasilSurvei->{$field};
-                $max = max($nilaiKriteria[$k->id] ?? [1]);
-                $min = min($nilaiKriteria[$k->id] ?? [0]);
-                
-                // Normalisasi berdasarkan atribut
-                if ($k->atribut == 'benefit') {
-                    // Benefit: nilai / max
+                $nilai = $hasilSurvei->getNilaiKriteria($k->id);
+
+                if ($nilai === null) {
+                    return redirect()->back()
+                        ->with('error', "Nilai kriteria '{$k->nama_kriteria}' belum diisi.");
+                }
+
+                $arrNilai = $nilaiKriteria[$k->id] ?? [];
+                $max = !empty($arrNilai) ? max($arrNilai) : 0;
+                $min = !empty($arrNilai) ? min($arrNilai) : 0;
+
+                if ($k->atribut === 'benefit') {
                     $normalisasi = $max > 0 ? $nilai / $max : 0;
-                } else {
-                    // Cost: min / nilai
+                } else { // cost
                     $normalisasi = $nilai > 0 ? $min / $nilai : 0;
                 }
-                
+
                 $nilaiTerbobot = $normalisasi * ($k->bobot / 100);
-                
-                // Simpan ke ranking_saw
+
                 RankingSaw::create([
-                    'hasil_survei_id' => $hasilSurvei->id,
-                    'kriteria_id' => $k->id,
+                    'hasil_survei_id'   => $hasilSurvei->id,
+                    'kriteria_id'       => $k->id,
                     'nilai_normalisasi' => $normalisasi,
-                    'nilai_terbobot' => $nilaiTerbobot,
+                    'nilai_terbobot'    => $nilaiTerbobot,
                 ]);
             }
 
-            // 3. Hitung total nilai preferensi
-            $totalPreferensi = RankingSaw::where('hasil_survei_id', $hasilSurvei->id)->sum('nilai_terbobot');
-            
-            // 4. Update nilai preferensi di hasil survei
-            $hasilSurvei->update([
-                'nilai_preferensi' => $totalPreferensi,
-            ]);
+            // 3. Total preferensi
+            $totalPreferensi = RankingSaw::where('hasil_survei_id', $hasilSurvei->id)
+                ->sum('nilai_terbobot');
 
-            return redirect()->route('survei.show', $hasilSurvei->id)
-                ->with('success', 'Perhitungan SAW berhasil dilakukan! Nilai: ' . number_format($totalPreferensi, 4));
+            $hasilSurvei->update(['nilai_preferensi' => $totalPreferensi]);
+
+            return redirect()->route('hasil-survei.show', $hasilSurvei->id)
+                ->with('success', 'Perhitungan SAW berhasil! Nilai: ' . number_format($totalPreferensi, 4));
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat perhitungan SAW: ' . $e->getMessage());
@@ -320,7 +302,7 @@ class HasilSurveiController extends Controller
                 ]
             );
 
-            return redirect()->route('survei.show', $hasilSurvei->id)
+            return redirect()->route('rekomendasi.index', $hasilSurvei->id)
                 ->with('success', 'Rekomendasi berhasil digenerate! 
                     Jarak Lampu: ' . number_format($jarakAntarLampu, 2) . ' meter, 
                     Jumlah Lampu: ' . $jumlahLampu . ' unit');

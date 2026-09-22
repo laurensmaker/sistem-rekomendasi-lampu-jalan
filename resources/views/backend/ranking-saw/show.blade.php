@@ -148,15 +148,20 @@
                                     $totalNormalisasi += $ranking->nilai_normalisasi;
                                     $totalTerbobot += $ranking->nilai_terbobot;
                                     $kriteria = $ranking->kriteria;
-                                    
-                                    // Ambil nilai max/min untuk kriteria ini
-                                    $field = $kriteria->nama_kriteria;
-                                    $allValues = \App\Models\HasilSurvei::pluck($field)->toArray();
-                                    $max = max($allValues);
-                                    $min = min($allValues);
+
+                                    // Ambil nilai max/min dari tabel pivot untuk kriteria ini
+                                    $allValues = \App\Models\HasilSurveiDetail::where('kriteria_id', $kriteria->id)
+                                                    ->pluck('nilai')
+                                                    ->filter()
+                                                    ->toArray();
+                                    $max = !empty($allValues) ? max($allValues) : 0;
+                                    $min = !empty($allValues) ? min($allValues) : 0;
+
+                                    // Nilai kriteria untuk survei ini (dari pivot)
+                                    $nilaiSurvei = $hasilSurvei->getNilaiKriteria($kriteria->id);
                                 @endphp
                                 <tr>
-                                    <td><strong>C{{ $index + 1 }}</strong></td>
+                                    <td><strong>{{ $kriteria->kode_kriteria }}</strong></td>
                                     <td>{{ ucfirst(str_replace('_', ' ', $kriteria->nama_kriteria)) }}</td>
                                     <td>{{ $kriteria->bobot }}%</td>
                                     <td>
@@ -164,7 +169,7 @@
                                             {{ ucfirst($kriteria->atribut) }}
                                         </span>
                                     </td>
-                                    <td class="text-center"><strong>{{ $hasilSurvei->{$field} }}</strong></td>
+                                    <td class="text-center"><strong>{{ $nilaiSurvei ?? '-' }}</strong></td>
                                     <td class="text-center">
                                         @if($kriteria->atribut == 'benefit')
                                             Max: {{ number_format($max, 0) }}

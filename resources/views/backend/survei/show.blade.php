@@ -357,75 +357,77 @@
     </div>
 </div>
 
-<!-- Modal Setujui -->
-<div class="modal fade" id="setujuiModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('rekomendasi.validasi', $hasilSurvei->rekomendasi->id) }}" method="POST">
-                @csrf
-                <input type="hidden" name="status" value="disetujui">
-                <div class="modal-header">
-                    <h5 class="modal-title">Setujui Rekomendasi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Anda akan menyetujui rekomendasi untuk lokasi:</p>
-                    <h6><strong>{{ $hasilSurvei->lokasi->nama_jalan }}</strong></h6>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <small class="text-muted">Jumlah Lampu</small>
-                            <p><strong>{{ $hasilSurvei->rekomendasi->jumlah_lampu }} unit</strong></p>
+@if($hasilSurvei->rekomendasi)
+    <!-- Modal Setujui -->
+    <div class="modal fade" id="setujuiModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('rekomendasi.validasi', $hasilSurvei->rekomendasi->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="status" value="disetujui">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Setujui Rekomendasi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Anda akan menyetujui rekomendasi untuk lokasi:</p>
+                        <h6><strong>{{ $hasilSurvei->lokasi->nama_jalan ?? '-' }}</strong></h6>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <small class="text-muted">Jumlah Lampu</small>
+                                <p><strong>{{ $hasilSurvei->rekomendasi->jumlah_lampu }} unit</strong></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Total Biaya</small>
+                                <p><strong>Rp {{ number_format($hasilSurvei->rekomendasi->total_biaya, 0, ',', '.') }}</strong></p>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <small class="text-muted">Total Biaya</small>
-                            <p><strong>Rp {{ number_format($hasilSurvei->rekomendasi->total_biaya, 0, ',', '.') }}</strong></p>
+                        <div class="mb-3">
+                            <label for="catatan_setujui" class="form-label">Catatan (Opsional)</label>
+                            <textarea name="catatan" id="catatan_setujui" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="catatan_setujui" class="form-label">Catatan (Opsional)</label>
-                        <textarea name="catatan" id="catatan_setujui" class="form-control" rows="2"></textarea>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-success">
+                            <i data-feather="check"></i> Setujui
+                        </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">
-                        <i data-feather="check"></i> Setujui
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Tolak -->
-<div class="modal fade" id="tolakModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('rekomendasi.validasi', $hasilSurvei->rekomendasi->id) }}" method="POST">
-                @csrf
-                <input type="hidden" name="status" value="ditolak">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tolak Rekomendasi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Anda akan menolak rekomendasi untuk lokasi:</p>
-                    <h6><strong>{{ $hasilSurvei->lokasi->nama_jalan }}</strong></h6>
-                    <div class="mb-3">
-                        <label for="catatan_tolak" class="form-label">Catatan Penolakan <span class="text-danger">*</span></label>
-                        <textarea name="catatan" id="catatan_tolak" class="form-control" rows="3" required></textarea>
+    <!-- Modal Tolak -->
+    <div class="modal fade" id="tolakModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('rekomendasi.validasi', $hasilSurvei->rekomendasi->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="status" value="ditolak">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tolak Rekomendasi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">
-                        <i data-feather="x"></i> Tolak
-                    </button>
-                </div>
-            </form>
+                    <div class="modal-body">
+                        <p>Anda akan menolak rekomendasi untuk lokasi:</p>
+                        <h6><strong>{{ $hasilSurvei->lokasi->nama_jalan ?? '-' }}</strong></h6>
+                        <div class="mb-3">
+                            <label for="catatan_tolak" class="form-label">Catatan Penolakan <span class="text-danger">*</span></label>
+                            <textarea name="catatan" id="catatan_tolak" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i data-feather="x"></i> Tolak
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+@endif
 
 @endsection
 

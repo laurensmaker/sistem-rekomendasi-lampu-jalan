@@ -6,10 +6,10 @@
 <div class="d-sm-flex justify-content-between align-items-center mb-4">
     <h3 class="fs-18">Detail Rekomendasi</h3>
     <div>
-        <a href="{{ route('rekomendasi.cetak', $rekomendasi->id) }}" 
+        {{-- <a href="{{ route('rekomendasi.cetak', $rekomendasi->id) }}" 
            target="_blank" class="btn btn-secondary btn-sm">
             <i data-feather="printer"></i> Cetak
-        </a>
+        </a> --}}
         <a href="{{ route('rekomendasi.index') }}" class="btn btn-secondary btn-sm">
             <i data-feather="arrow-left"></i> Kembali
         </a>

@@ -99,9 +99,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="50">
-                            <input type="checkbox" id="selectAll">
-                        </th>
                         <th>#</th>
                         <th>Nama Kriteria</th>
                         <th>Bobot</th>
@@ -114,9 +111,6 @@
                 <tbody>
                     @forelse($kriteria as $key => $item)
                         <tr>
-                            <td>
-                                <input type="checkbox" class="kriteria-checkbox" value="{{ $item->id }}">
-                            </td>
                             <td>{{ $kriteria->firstItem() + $key }}</td>
                             <td>
                                 <i data-feather="sliders" class="me-2 text-primary" style="width: 16px;"></i>
@@ -213,20 +207,6 @@
                     </tr>
                 </tfoot>
             </table>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
-                <button id="deleteSelected" class="btn btn-danger btn-sm" disabled>
-                    <i data-feather="trash-2"></i> Hapus Terpilih
-                </button>
-                <span class="ms-2 text-muted small">
-                    <span id="selectedCount">0</span> dipilih
-                </span>
-            </div>
-            <div>
-                {{ $kriteria->links() }}
-            </div>
         </div>
     </div>
 </div>
