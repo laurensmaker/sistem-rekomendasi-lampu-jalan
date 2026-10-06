@@ -71,7 +71,7 @@
                     @if($rekomendasi->tanggal_disetujui)
                         <tr>
                             <th>Tanggal Disetujui</th>
-                            <td>{{ $rekomendasi->tanggal_disetujui->format('d/m/Y H:i:s') }}</td>
+                            <td>{{ $rekomendasi->tanggal_disetujui }}</td>
                         </tr>
                     @endif
                     @if($rekomendasi->catatan)
@@ -125,13 +125,13 @@
                             <small>Rumus: Panjang Jalan / Jarak Antar Lampu</small>
                         </div>
                     </div>
-                    <div class="col-12">
+                    {{-- <div class="col-12">
                         <div class="bg-warning-soft rounded-10 p-3 text-center">
                             <h6 class="text-muted">Total Estimasi Biaya</h6>
                             <h2 class="fw-bold text-warning">Rp {{ number_format($rekomendasi->total_biaya, 0, ',', '.') }}</h2>
                             <small>@ Rp 5.000.000 / Unit</small>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -187,10 +187,10 @@
                                             <small class="text-muted">Jumlah Lampu</small>
                                             <p><strong>{{ $rekomendasi->jumlah_lampu }} unit</strong></p>
                                         </div>
-                                        <div class="col-6">
+                                        {{-- <div class="col-6">
                                             <small class="text-muted">Total Biaya</small>
                                             <p><strong>Rp {{ number_format($rekomendasi->total_biaya, 0, ',', '.') }}</strong></p>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="mb-3">
                                         <label for="catatan_setujui" class="form-label">Catatan (Opsional)</label>

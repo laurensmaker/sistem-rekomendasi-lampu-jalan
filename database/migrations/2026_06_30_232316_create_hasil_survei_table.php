@@ -19,8 +19,8 @@ return new class extends Migration
             $table->date('tanggal_survei');
 
             $table->decimal('panjang_jalan', 10, 2)->default(0);
-            $table->decimal('lebar_jalan', 10, 2)->default(0);
             $table->decimal('tinggi_tiang', 10, 2)->default(0);
+            $table->string('jenis_lampu', 100);
 
             $table->decimal('nilai_preferensi', 10, 4)->nullable();
             $table->timestamps();

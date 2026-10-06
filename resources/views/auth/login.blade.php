@@ -352,10 +352,9 @@
             </div>
             
             <form method="POST" action="{{ route('login') }}">
-                @if ($errors->has('username') || $errors->has('password'))
+                @if(session('error'))
                     <div class="alert alert-danger">
-                        {{ $errors->first('username') }}
-                        {{ $errors->first('password') }}
+                        {{ session('error') }}
                     </div>
                 @endif
                 @csrf

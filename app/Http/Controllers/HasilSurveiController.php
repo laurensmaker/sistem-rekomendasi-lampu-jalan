@@ -61,8 +61,8 @@ class HasilSurveiController extends Controller
             'dokumentasi_id'  => 'required|exists:dokumentasi,id',
             'tanggal_survei'  => 'required|date',
             'panjang_jalan'   => 'required|numeric|min:0',
-            'lebar_jalan'     => 'required|numeric|min:0',
             'tinggi_tiang'    => 'required|numeric|min:0',
+            'jenis_lampu'     => 'required|in:LED,LPS,Fluorescent,Metal Halide',
             'kriteria'        => 'required|array',
         ]);
 
@@ -85,7 +85,7 @@ class HasilSurveiController extends Controller
                 'user_id'          => Auth::id(),
                 'tanggal_survei'   => $request->tanggal_survei,
                 'panjang_jalan'    => $request->panjang_jalan,
-                'lebar_jalan'      => $request->lebar_jalan,
+                'jenis_lampu'      => $request->jenis_lampu,
                 'tinggi_tiang'     => $request->tinggi_tiang,
                 'nilai_preferensi' => null,
             ]);
@@ -129,7 +129,7 @@ class HasilSurveiController extends Controller
         $validator = Validator::make($request->all(), [
             'lokasi_id' => 'required|exists:lokasi,id',
             'tanggal_survei' => 'required|date',
-            'lebar_jalan' => 'required|numeric|min:0',
+            'jenis_lampu' => 'required|in:LED,LPS,Fluorescent,Metal Halide',
             'panjang_jalan' => 'required|numeric|min:0',
             'tinggi_tiang' => 'required|numeric|min:0',
             'kepadatan_penduduk' => 'required|integer|min:1|max:5',
@@ -149,7 +149,7 @@ class HasilSurveiController extends Controller
             $hasilSurvei->update([
                 'lokasi_id' => $request->lokasi_id,
                 'tanggal_survei' => $request->tanggal_survei,
-                'lebar_jalan' => $request->lebar_jalan,
+                'jenis_lampu' => $request->jenis_lampu,
                 'panjang_jalan' => $request->panjang_jalan,
                 'tinggi_tiang' => $request->tinggi_tiang,
                 'kepadatan_penduduk' => $request->kepadatan_penduduk,
@@ -261,7 +261,7 @@ class HasilSurveiController extends Controller
         }
     }
 
-   public function generateRekomendasi(HasilSurvei $hasilSurvei)
+    public function generateRekomendasi(HasilSurvei $hasilSurvei)
     {
         try {
             // Ambil nilai preferensi
@@ -275,7 +275,6 @@ class HasilSurveiController extends Controller
             // Data untuk perhitungan LPJU
             $panjangJalan = $hasilSurvei->panjang_jalan;
             $tinggiTiang = $hasilSurvei->tinggi_tiang;
-            $lebarJalan = $hasilSurvei->lebar_jalan;
             
             // Rumus: Jarak antar lampu = 4 × Tinggi Tiang
             $jarakAntarLampu = 4 * $tinggiTiang;

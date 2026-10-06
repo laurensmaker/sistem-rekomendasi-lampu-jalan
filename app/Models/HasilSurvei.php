@@ -24,7 +24,7 @@ class HasilSurvei extends Model
         'kerawanan_kecelakaan',
         'panjang_jalan',
         'tinggi_tiang',
-        'lebar_jalan',
+        'jenis_lampu',
         'nilai_preferensi',
     ];
 

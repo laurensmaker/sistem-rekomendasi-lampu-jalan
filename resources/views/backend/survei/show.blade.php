@@ -120,8 +120,8 @@
                 <div class="row">
                     <div class="col-4">
                         <div class="bg-light rounded-10 p-3 text-center">
-                            <h6 class="text-muted">Lebar Jalan</h6>
-                            <h4>{{ number_format($hasilSurvei->lebar_jalan, 0) }} m</h4>
+                            <h6 class="text-muted">Jenis Lampu</h6>
+                            <h4>{{ $hasilSurvei->jenis_lampu }}</h4>
                         </div>
                     </div>
                     <div class="col-4">
@@ -248,13 +248,13 @@
                                 <small>Meter</small>
                             </div>
                         </div>
-                        <div class="col-12">
+                        {{-- <div class="col-12">
                             <div class="bg-success-soft rounded-10 p-3 text-center">
                                 <h6 class="text-muted">Total Biaya</h6>
                                 <h3 class="text-success">Rp {{ number_format($hasilSurvei->rekomendasi->total_biaya, 0, ',', '.') }}</h3>
                                 <small>Estimasi</small>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-12">
                             <div class="alert alert-{{ $hasilSurvei->rekomendasi->status == 'disetujui' ? 'success' : ($hasilSurvei->rekomendasi->status == 'ditolak' ? 'danger' : ($hasilSurvei->rekomendasi->status == 'diajukan' ? 'warning' : 'info')) }}">
                                 <h6 class="mb-1">Status: 
@@ -377,10 +377,10 @@
                                 <small class="text-muted">Jumlah Lampu</small>
                                 <p><strong>{{ $hasilSurvei->rekomendasi->jumlah_lampu }} unit</strong></p>
                             </div>
-                            <div class="col-6">
+                            {{-- <div class="col-6">
                                 <small class="text-muted">Total Biaya</small>
                                 <p><strong>Rp {{ number_format($hasilSurvei->rekomendasi->total_biaya, 0, ',', '.') }}</strong></p>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="mb-3">
                             <label for="catatan_setujui" class="form-label">Catatan (Opsional)</label>

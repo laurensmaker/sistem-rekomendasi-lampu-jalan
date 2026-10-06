@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="d-sm-flex justify-content-between align-items-center mb-4">
-    <h3 class="fs-18">3 Prioritas Utama Pemasangan LPJU</h3>
+    <h3 class="fs-18">3 Rekomendasi Utama Pemasangan LPJU</h3>
     <div>
         {{-- <a href="{{ route('ranking-saw.export-excel') }}" class="btn btn-success btn-sm">
             <i data-feather="file-text"></i> Export Excel
@@ -147,6 +147,12 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="bg-light rounded-10 p-2 text-center">
+                                        <small class="text-muted">Tinggi Tiang</small>
+                                        <h5 class="mb-0">{{ number_format($item->tinggi_tiang, 0) }} m</h5>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-light rounded-10 p-2 text-center">
                                         <small class="text-muted">Jumlah Lampu</small>
                                         <h5 class="mb-0 text-primary">
                                             {{ $item->rekomendasi ? $item->rekomendasi->jumlah_lampu : '-' }}
@@ -162,14 +168,23 @@
                                         </h5>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-6">
+                                    <div class="bg-light rounded-10 p-2 text-center">
+                                        <small class="text-muted">Jenis Lampu</small>
+                                        <h5 class="mb-0 text-primary">
+                                            {{ $item->rekomendasi ? $item->jenis_lampu : '-' }}
+                                            <small>250 watt</small>
+                                        </h5>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-12">
                                     <div class="bg-light rounded-10 p-2 text-center">
                                         <small class="text-muted">Total Biaya</small>
                                         <h5 class="mb-0 text-success">
                                             {{ $item->rekomendasi ? 'Rp ' . number_format($item->rekomendasi->total_biaya, 0, ',', '.') : '-' }}
                                         </h5>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="mt-3">

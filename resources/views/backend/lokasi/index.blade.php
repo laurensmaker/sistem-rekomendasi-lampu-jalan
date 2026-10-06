@@ -30,25 +30,11 @@
     <div class="col-md-3">
         <div class="card bg-white border-0 rounded-10 shadow-sm">
             <div class="card-body">
-                <h6 class="text-muted">Koordinat Terakhir</h6>
+                <h6 class="text-muted">Terakhir Ditambahkan</h6>
                 <h6 class="mb-0 text-muted">
                     @php
                         $last = \App\Models\Lokasi::latest()->first();
                     @endphp
-                    @if($last)
-                        {{ number_format($last->latitude, 4) }}, {{ number_format($last->longitude, 4) }}
-                    @else
-                        -
-                    @endif
-                </h6>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-white border-0 rounded-10 shadow-sm">
-            <div class="card-body">
-                <h6 class="text-muted">Terakhir Ditambahkan</h6>
-                <h6 class="mb-0 text-muted">
                     @if($last)
                         {{ $last->created_at->format('d/m/Y H:i') }}
                     @else
@@ -108,9 +94,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th width="50">
-                            <input type="checkbox" id="selectAll">
-                        </th>
                         <th>#</th>
                         <th>Nama Jalan</th>
                         <th>Distrik</th>
@@ -124,9 +107,6 @@
                 <tbody>
                     @forelse($lokasi as $key => $item)
                         <tr>
-                            <td>
-                                <input type="checkbox" class="lokasi-checkbox" value="{{ $item->id }}">
-                            </td>
                             <td>{{ $lokasi->firstItem() + $key }}</td>
                             <td>
                                 <i data-feather="map-pin" class="me-2 text-primary" style="width: 16px; height: 16px;"></i>
@@ -190,14 +170,7 @@
                     <tr class="table-light">
                         <td colspan="9">
                             <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <button id="deleteSelected" class="btn btn-danger btn-sm" disabled>
-                                        <i data-feather="trash-2"></i> Hapus Terpilih
-                                    </button>
-                                    <span class="ms-2 text-muted small">
-                                        <span id="selectedCount">0</span> dipilih
-                                    </span>
-                                </div>
+                                
                                 <div>
                                     <small class="text-muted">
                                         Menampilkan {{ $lokasi->firstItem() ?? 0 }} - {{ $lokasi->lastItem() ?? 0 }} 

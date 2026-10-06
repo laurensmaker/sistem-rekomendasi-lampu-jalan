@@ -154,7 +154,7 @@
                     {{ strtoupper($rekomendasi->status) }}
                 </span>
                 @if($rekomendasi->status == 'disetujui')
-                    <br><small>Disetujui pada: {{ $rekomendasi->tanggal_disetujui->format('d F Y') }}</small>
+                    <br><small>Disetujui pada: {{ $rekomendasi->tanggal_disetujui }}</small>
                 @endif
             </td>
         </tr>
@@ -196,6 +196,7 @@
             </tr>
         </tbody>
     </table>
+    <br><br><br><br>
 
     <!-- Rekomendasi LPJU -->
     <h4 class="mt-20">B. Rekomendasi Kebutuhan LPJU</h4>
@@ -203,10 +204,6 @@
         <tr>
             <td style="width: 40%; font-weight: bold;">Panjang Jalan</td>
             <td style="width: 60%;">{{ number_format($rekomendasi->hasilSurvei->panjang_jalan, 0) }} meter</td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Lebar Jalan</td>
-            <td>{{ number_format($rekomendasi->hasilSurvei->lebar_jalan, 0) }} meter</td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Tinggi Tiang</td>
@@ -221,10 +218,6 @@
         <tr style="background: #f0f8ff; font-weight: bold;">
             <td style="font-weight: bold; color: #007bff;">Jumlah Lampu yang Dibutuhkan</td>
             <td style="color: #007bff; font-size: 18px;">{{ $rekomendasi->jumlah_lampu }} Unit</td>
-        </tr>
-        <tr style="background: #f0fff0; font-weight: bold;">
-            <td style="font-weight: bold; color: #28a745;">Total Estimasi Biaya</td>
-            <td style="color: #28a745; font-size: 18px;">Rp {{ number_format($rekomendasi->total_biaya, 0, ',', '.') }}</td>
         </tr>
     </table>
 

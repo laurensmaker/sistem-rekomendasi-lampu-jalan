@@ -25,7 +25,7 @@
                     <label for="lokasi_id" class="form-label">Lokasi <span class="text-danger">*</span></label>
                     <select name="lokasi_id" 
                             id="lokasi_id" 
-                            class="form-select @error('lokasi_id') is-invalid @enderror" 
+                            class="form-control form-select @error('lokasi_id') is-invalid @enderror" 
                             required>
                         <option value="">Pilih Lokasi</option>
                         @foreach($lokasi as $item)
@@ -43,7 +43,7 @@
                     <label for="dokumentasi_id" class="form-label">Dokumentasi <span class="text-danger">*</span></label>
                     <select name="dokumentasi_id" 
                             id="dokumentasi_id" 
-                            class="form-select @error('dokumentasi_id') is-invalid @enderror" 
+                            class="form-control form-select @error('dokumentasi_id') is-invalid @enderror" 
                             required>
                         <option value="">Pilih Dokumentasi</option>
                         @foreach($dokumentasi as $item)
@@ -90,22 +90,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-
-                <div class="col-lg-4 mb-3">
-                    <label for="lebar_jalan" class="form-label">Lebar Jalan (meter) <span class="text-danger">*</span></label>
-                    <input type="number" 
-                           name="lebar_jalan" 
-                           id="lebar_jalan" 
-                           class="form-control @error('lebar_jalan') is-invalid @enderror" 
-                           value="{{ old('lebar_jalan') }}"
-                           placeholder="Contoh: 6" 
-                           step="0.01"
-                           min="0"
-                           required>
-                    @error('lebar_jalan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                
 
                 <div class="col-lg-4 mb-3">
                     <label for="tinggi_tiang" class="form-label">Tinggi Tiang (meter) <span class="text-danger">*</span></label>
@@ -123,6 +108,35 @@
                     @enderror
                 </div>
 
+                <div class="col-lg-4 mb-3">
+                    <label for="jenis_lampu" class="form-label">
+                        Jenis Lampu <span class="text-danger">*</span>
+                    </label>
+
+                    <select name="jenis_lampu" 
+                            id="jenis_lampu" 
+                            class=" form-control form-select @error('jenis_lampu') is-invalid @enderror"
+                            required>
+                        <option value="">-- Pilih Jenis Lampu --</option>
+                        <option value="LED" {{ old('jenis_lampu') == 'LED' ? 'selected' : '' }}>
+                            LED
+                        </option>
+                        <option value="LPS" {{ old('jenis_lampu') == 'LPS' ? 'selected' : '' }}>
+                            LPS
+                        </option>
+                        <option value="Fluorescent" {{ old('jenis_lampu') == 'Fluorescent' ? 'selected' : '' }}>
+                            Fluorescent
+                        </option>
+                        <option value="Metal Halide" {{ old('jenis_lampu') == 'Metal Halide' ? 'selected' : '' }}>
+                            Metal Halide
+                        </option>
+                    </select>
+
+                    @error('jenis_lampu')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <!-- Kriteria Penilaian Dinamis -->
                 <div class="col-12 mb-3 mt-3">
                     <h5 class="border-bottom pb-2">Penilaian Kriteria SAW (Skala 1-5)</h5>
@@ -132,12 +146,12 @@
                     </p>
                 </div>
 
-                @foreach($kriteria as $kriteria)
+                @foreach($kriteria as $key => $kriteria)
                 <div class="col-lg-6 mb-3">
                     <label for="kriteria_{{ $kriteria->id }}" class="form-label">
                         {{ $kriteria->kode_kriteria }} - {{ $kriteria->nama_kriteria }} <span class="text-danger">*</span>
-                        <span class="badge {{ $kriteria->jenis == 'Benefit' ? 'bg-success' : 'bg-danger' }}">
-                            {{ $kriteria->jenis }}
+                        <span class="badge {{ $kriteria->atribut == 'benefit' ? 'bg-success' : 'bg-danger' }}">
+                            C{{ $key+1 }} : {{ $kriteria->atribut }}
                         </span>
                     </label>
                     <input type="number" 
@@ -151,7 +165,7 @@
                            step="1"
                            required>
                     <small class="text-muted">
-                        @if($kriteria->jenis == 'Benefit')
+                        @if($kriteria->atribut == 'benefit')
                             Semakin tinggi nilai semakin baik
                         @else
                             Semakin rendah nilai semakin baik
@@ -165,7 +179,7 @@
                 @endforeach
 
                 <!-- Informasi -->
-                <div class="col-lg-12 mb-3 mt-3">
+                {{-- <div class="col-lg-12 mb-3 mt-3">
                     <div class="alert alert-info">
                         <i data-feather="info" class="me-1"></i>
                         <strong>Informasi:</strong>
@@ -181,7 +195,7 @@
                             <li>Kebutuhan LPJU = Panjang Jalan / Jarak Antar Lampu</li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Tombol Aksi -->
                 <div class="col-lg-12 mt-3">

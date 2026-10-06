@@ -96,10 +96,10 @@
                             <th>Jarak Antar Lampu</th>
                             <td>{{ number_format($hasilSurvei->rekomendasi->jarak_antar_lampu, 2) }} meter</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <th>Total Biaya</th>
                             <td><strong>Rp {{ number_format($hasilSurvei->rekomendasi->total_biaya, 0, ',', '.') }}</strong></td>
-                        </tr>
+                        </tr> --}}
                         @if($hasilSurvei->rekomendasi->catatan)
                             <tr>
                                 <th>Catatan</th>
@@ -132,8 +132,7 @@
                                 <th>Kriteria</th>
                                 <th>Bobot</th>
                                 <th>Atribut</th>
-                                <th>Nilai</th>
-                                <th>Max/Min</th>
+                                <th>Nilai Kriteria</th>
                                 <th>Normalisasi</th>
                                 <th>Nilai Terbobot</th>
                             </tr>
@@ -161,7 +160,7 @@
                                     $nilaiSurvei = $hasilSurvei->getNilaiKriteria($kriteria->id);
                                 @endphp
                                 <tr>
-                                    <td><strong>{{ $kriteria->kode_kriteria }}</strong></td>
+                                    <td>C{{ $index+1 }}</strong></td>
                                     <td>{{ ucfirst(str_replace('_', ' ', $kriteria->nama_kriteria)) }}</td>
                                     <td>{{ $kriteria->bobot }}%</td>
                                     <td>
@@ -170,13 +169,6 @@
                                         </span>
                                     </td>
                                     <td class="text-center"><strong>{{ $nilaiSurvei ?? '-' }}</strong></td>
-                                    <td class="text-center">
-                                        @if($kriteria->atribut == 'benefit')
-                                            Max: {{ number_format($max, 0) }}
-                                        @else
-                                            Min: {{ number_format($min, 0) }}
-                                        @endif
-                                    </td>
                                     <td class="text-center">{{ number_format($ranking->nilai_normalisasi, 4) }}</td>
                                     <td class="text-center"><strong>{{ number_format($ranking->nilai_terbobot, 4) }}</strong></td>
                                 </tr>
@@ -215,8 +207,8 @@
                     </div>
                     <div class="col-md-3">
                         <div class="bg-light rounded-10 p-3 text-center">
-                            <h6 class="text-muted">Lebar Jalan</h6>
-                            <h4>{{ number_format($hasilSurvei->lebar_jalan, 0) }} m</h4>
+                            <h6 class="text-muted">Jenis Lampu</h6>
+                            <h4>{{ $hasilSurvei->jenis_lampu }}</h4>
                         </div>
                     </div>
                     <div class="col-md-3">

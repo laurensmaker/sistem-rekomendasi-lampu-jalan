@@ -202,7 +202,7 @@
                                 <th>Distrik</th>
                                 <th>Surveyor</th>
                                 <th>Jumlah Lampu</th>
-                                <th>Total Biaya</th>
+                                {{-- <th>Total Biaya</th> --}}
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -221,11 +221,11 @@
                                         <span class="fw-bold text-primary">{{ $rekom->jumlah_lampu }}</span>
                                         <small class="text-muted">unit</small>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <span class="fw-bold text-success">
                                             Rp {{ number_format($rekom->total_biaya, 0, ',', '.') }}
                                         </span>
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <span class="badge bg-warning">
                                             <i data-feather="clock" style="width: 12px;"></i>
@@ -275,10 +275,10 @@
                                                                     <small class="text-muted">Jumlah Lampu</small>
                                                                     <p><strong>{{ $rekom->jumlah_lampu }} unit</strong></p>
                                                                 </div>
-                                                                <div class="col-6">
+                                                                {{-- <div class="col-6">
                                                                     <small class="text-muted">Total Biaya</small>
                                                                     <p><strong>Rp {{ number_format($rekom->total_biaya, 0, ',', '.') }}</strong></p>
-                                                                </div>
+                                                                </div> --}}
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="catatan_setujui{{ $rekom->id }}" class="form-label">Catatan (Opsional)</label>

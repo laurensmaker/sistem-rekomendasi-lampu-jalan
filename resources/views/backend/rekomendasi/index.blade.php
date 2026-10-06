@@ -54,22 +54,6 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-muted mb-1">Total Anggaran</h6>
-                        <h5 class="mb-0 fw-bold text-success">Rp {{ number_format(\App\Models\Rekomendasi::sum('total_biaya'), 0, ',', '.') }}</h5>
-                        <small class="text-muted">Estimasi biaya</small>
-                    </div>
-                    <div class="avatar bg-warning-soft rounded-10 p-3">
-                        <i data-feather="dollar-sign" class="text-warning" style="width: 28px; height: 28px;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6">
-        <div class="card bg-white border-0 rounded-10 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
                         <h6 class="text-muted mb-1">Rata-rata Nilai SAW</h6>
                         <h3 class="mb-0 fw-bold">
                             {{ number_format(\App\Models\HasilSurvei::whereNotNull('nilai_preferensi')->avg('nilai_preferensi'), 4) }}
@@ -151,7 +135,7 @@
                         <th>Panjang Jalan</th>
                         <th>Jarak Lampu</th>
                         <th>Jumlah Lampu</th>
-                        <th>Total Biaya</th>
+                        {{-- <th>Total Biaya</th> --}}
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -208,11 +192,11 @@
                                 <span class="fw-bold text-primary">{{ $item->jumlah_lampu }}</span>
                                 <small class="text-muted">unit</small>
                             </td>
-                            <td>
+                            {{-- <td>
                                 <span class="fw-bold text-success">
                                     Rp {{ number_format($item->total_biaya, 0, ',', '.') }}
                                 </span>
-                            </td>
+                            </td> --}}
                             <td>
                                 <span class="badge bg-{{ $statusColors[$item->status] ?? 'secondary' }}">
                                     <i data-feather="{{ $statusIcons[$item->status] ?? 'file-text' }}" style="width: 12px;"></i>
