@@ -147,36 +147,49 @@
                 </div>
 
                 @foreach($kriteria as $key => $kriteria)
-                <div class="col-lg-6 mb-3">
-                    <label for="kriteria_{{ $kriteria->id }}" class="form-label">
-                        {{ $kriteria->kode_kriteria }} - {{ $kriteria->nama_kriteria }} <span class="text-danger">*</span>
-                        <span class="badge {{ $kriteria->atribut == 'benefit' ? 'bg-success' : 'bg-danger' }}">
-                            C{{ $key+1 }} : {{ $kriteria->atribut }}
-                        </span>
-                    </label>
-                    <input type="number" 
-                           name="kriteria[{{ $kriteria->id }}]" 
-                           id="kriteria_{{ $kriteria->id }}" 
-                           class="form-control @error('kriteria.'.$kriteria->id) is-invalid @enderror" 
-                           value="{{ old('kriteria.'.$kriteria->id, 3) }}"
-                           placeholder="Masukkan nilai 1-5" 
-                           min="1" 
-                           max="5"
-                           step="1"
-                           required>
-                    <small class="text-muted">
-                        @if($kriteria->atribut == 'benefit')
-                            Semakin tinggi nilai semakin baik
-                        @else
-                            Semakin rendah nilai semakin baik
-                        @endif
-                        (1=Sangat Rendah, 2=Rendah, 3=Sedang, 4=Tinggi, 5=Sangat Tinggi)
-                    </small>
-                    @error('kriteria.'.$kriteria->id)
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-                @endforeach
+                    <div class="col-lg-6 mb-3">
+                        <label for="kriteria_{{ $kriteria->id }}" class="form-label">
+                            {{ $kriteria->kode_kriteria }} - {{ $kriteria->nama_kriteria }} <span class="text-danger">*</span>
+                            <span class="badge {{ $kriteria->atribut == 'benefit' ? 'bg-success' : 'bg-danger' }}">
+                                C{{ $key+1 }} : {{ $kriteria->atribut }}
+                            </span>
+                        </label>
+                        <input type="number" 
+                            name="kriteria[{{ $kriteria->id }}]" 
+                            id="kriteria_{{ $kriteria->id }}" 
+                            class="form-control @error('kriteria.'.$kriteria->id) is-invalid @enderror" 
+                            value="{{ old('kriteria.'.$kriteria->id, 3) }}"
+                            placeholder="Masukkan nilai 1-5" 
+                            min="1" 
+                            max="5"
+                            step="1"
+                            required>
+                        <small class="text-muted d-block mt-1">
+                            @if($kriteria->atribut == 'benefit')
+                                <strong>Skala (Benefit):</strong>
+                                1 = Sangat Tidak Baik, 
+                                2 = Tidak Baik, 
+                                3 = Cukup Baik, 
+                                4 = Baik, 
+                                5 = Sangat Baik
+                                <br>
+                                <span class="text-success">Semakin tinggi nilai semakin baik</span>
+                            @else
+                                <strong>Skala (Cost):</strong>
+                                1 = Sangat Baik, 
+                                2 = Baik, 
+                                3 = Cukup Baik, 
+                                4 = Tidak Baik, 
+                                5 = Sangat Tidak Baik
+                                <br>
+                                <span class="text-danger">Semakin rendah nilai semakin baik</span>
+                            @endif
+                        </small>
+                        @error('kriteria.'.$kriteria->id)
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    @endforeach
 
                 <!-- Informasi -->
                 {{-- <div class="col-lg-12 mb-3 mt-3">
